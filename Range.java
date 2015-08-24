@@ -28,6 +28,7 @@ public class Range {
 			ballsCollected.add(ballsOnField.remove(0));
 		}
 		cartOnField.set(false);
+		notifyAll();
 
 
 	}

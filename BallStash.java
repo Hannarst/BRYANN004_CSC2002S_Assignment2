@@ -24,7 +24,6 @@ public class BallStash {
 
 	public synchronized golfBall[] getBucketBalls(){
 		while(getBallsInStash()<sizeBucket){
-			notifyAll();
 			try {
 	 			wait();
 			}
@@ -34,17 +33,10 @@ public class BallStash {
 		for(int i=0; i<sizeBucket; i++){
 			bucket[i] = ballsInStash.remove(0);
 		}
-		notifyAll();
 		return bucket;
 	}
 
 	public synchronized void addBallsToStash(ArrayList<golfBall> balls){
-		while(getBallsInStash()==sizeStash){
-			try {
-				wait();
-			}
-			catch (InterruptedException e) {}
-		}
 		for(golfBall ball: balls){
 			ballsInStash.add(ball);
 		}
