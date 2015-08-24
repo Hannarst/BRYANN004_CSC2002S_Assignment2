@@ -49,8 +49,12 @@ public class Golfer extends Thread {
 		while (done.get()!=true) {
 
 				System.out.println(">>> Golfer #"+ myID + " trying to fill bucket with "+getBallsPerBucket()+" balls.");
-				golferBucket = sharedStash.getBucketBalls();
-				System.out.println("<<< Golfer #"+ myID + " filled bucket with          "+getBallsPerBucket()+" balls");
+				int left = sharedStash.getBucketBalls(golferBucket);
+				if(done.get()){
+					System.out.println(">>> Golfer #"+ myID + " returned with empty bucket!");
+					break;
+				}
+				System.out.println("<<< Golfer #"+ myID + " filled bucket with "+getBallsPerBucket()+" balls (remaining stash=" + left+")");
 
 
 				for (int b=0;b<ballsPerBucket;b++){ //for every ball in bucket
@@ -60,6 +64,10 @@ public class Golfer extends Thread {
 							sharedField.hitBallOntoField(golferBucket[b]);
 							System.out.println("Golfer #"+ myID + " hit ball #"+golferBucket[b].getID()+" onto field");
 
+							while(cartOnField.get()){
+								sleep(3000);
+							}
+						
 						}
 						catch (InterruptedException e) {
 							e.printStackTrace();
@@ -67,14 +75,7 @@ public class Golfer extends Thread {
 
 
 				    //!!wair for cart if necessary if cart there
-						while(cartOnField.get()){
-							try{
-								this.wait();
-							}
-							catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
+
 				}
 				//bucket now considered empty
 

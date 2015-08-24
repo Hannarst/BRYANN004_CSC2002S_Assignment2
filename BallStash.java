@@ -7,7 +7,7 @@ public class BallStash {
 	private static int sizeStash=20;
 	private static int sizeBucket=4;
 	//ADD variables: a collection of golf balls, called stash
-	private volatile ArrayList<golfBall> ballsInStash = new ArrayList();
+	private volatile BlockingQueue<golfBall> ballsInStash = new ArrayBlockingQueue(sizeStash);
 
 
 	public BallStash(){
@@ -22,25 +22,30 @@ public class BallStash {
 	// addBallsToStash
 	// getBallsInStash - return number of balls in the stash
 
-	public synchronized golfBall[] getBucketBalls(){
+	public synchronized int getBucketBalls(golfBall[] bucket){
 		while(getBallsInStash()<sizeBucket){
 			try {
 	 			wait();
 			}
 			catch (InterruptedException e) {}
 		}
-		golfBall[] bucket = new golfBall[sizeBucket];
 		for(int i=0; i<sizeBucket; i++){
-			bucket[i] = ballsInStash.remove(0);
+			try{
+				bucket[i] = ballsInStash.take();
+			}
+			catch(InterruptedException e) {}
 		}
-		return bucket;
+		
+		if(getBallsInStash()==0){
+			notifyAll();
+		}
+		return getBallsInStash();
 	}
 
 	public synchronized void addBallsToStash(ArrayList<golfBall> balls){
 		for(golfBall ball: balls){
 			ballsInStash.add(ball);
 		}
-		notifyAll();
 	}
 
 	public int getBallsInStash(){

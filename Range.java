@@ -8,7 +8,7 @@ public class Range {
 	private static int sizeStash=20;
 	private volatile AtomicBoolean cartOnField;
 	//ADD variable: ballsOnField collection;
-	private ArrayList<golfBall> ballsOnField = new ArrayList();
+	private volatile BlockingQueue<golfBall> ballsOnField = new ArrayBlockingQueue(sizeStash);
 
 	//Add constructors
 	public Range(AtomicBoolean cartFlag){
@@ -17,18 +17,24 @@ public class Range {
 
 	//ADD method: collectAllBallsFromField(golfBall [] ballsCollected)
 	public synchronized void collectAllBallsFromField(ArrayList<golfBall> ballsCollected){
-		while(ballsOnField.size()<sizeStash){
+		while(ballsOnField.size()==0){
 			try {
 				wait();
 			}
 			catch (InterruptedException e) {}
 		}
+		
 		cartOnField.set(true);
-		for(int i=0; i<ballsOnField.size(); i++){
-			ballsCollected.add(ballsOnField.remove(0));
+
+		for(golfBall elem : ballsOnField){
+			ballsCollected.add(elem);
 		}
-		cartOnField.set(false);
+		ballsOnField.clear();
+		
 		notifyAll();
+
+		cartOnField.set(false);
+		
 
 
 	}
@@ -39,5 +45,9 @@ public class Range {
 		if (ballsOnField.size()==sizeStash){
 			notifyAll();
 		}
+	}
+	
+	public synchronized int getNumBalls(){
+		return ballsOnField.size();
 	}
 }
