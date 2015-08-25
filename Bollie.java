@@ -1,3 +1,4 @@
+
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class Bollie extends Thread{
 		ArrayList<golfBall> ballsCollected = new ArrayList();
 		while (done.get()!=true) {
 			try {
-				sleep(waitTime.nextInt(3000));
+				sleep(waitTime.nextInt(5000));
 
-				
+				System.out.println("*********** Bollie going out ************");
 				
 				sharedField.collectAllBallsFromField(ballsCollected);
 				
@@ -43,6 +44,6 @@ public class Bollie extends Thread{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		    		}
 		}
+	}
 }

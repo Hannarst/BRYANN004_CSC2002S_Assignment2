@@ -1,3 +1,4 @@
+
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,7 +12,7 @@ public class Golfer extends Thread {
 	private volatile AtomicBoolean done;
 	private volatile AtomicBoolean cartOnField;
 
-	private static int noGolfers; //shared amoungst threads
+	private static AtomicInteger noGolfers = new AtomicInteger(1); //shared amoungst threads
 	private static int ballsPerBucket=4; //shared amoungst threads
 
 	private int myID;
@@ -33,9 +34,8 @@ public class Golfer extends Thread {
 		myID=newGolfID();
 	}
 
-	public  static int newGolfID() {
-		noGolfers++;
-		return noGolfers;
+	public synchronized static int newGolfID() {
+		return noGolfers.getAndIncrement();
 	}
 
 	public static void setBallsPerBucket (int noBalls) {

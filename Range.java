@@ -1,3 +1,4 @@
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.*;
@@ -7,17 +8,20 @@ import java.util.ArrayList;
 public class Range {
 	private static int sizeStash=20;
 	private volatile AtomicBoolean cartOnField;
+	private volatile AtomicBoolean done;
 	//ADD variable: ballsOnField collection;
 	private volatile BlockingQueue<golfBall> ballsOnField = new ArrayBlockingQueue(sizeStash);
 
 	//Add constructors
-	public Range(AtomicBoolean cartFlag){
+	public Range(AtomicBoolean cartFlag, AtomicBoolean doneF){
+		done = doneF;
 		cartOnField = cartFlag;
 	}
 
 	//ADD method: collectAllBallsFromField(golfBall [] ballsCollected)
 	public synchronized void collectAllBallsFromField(ArrayList<golfBall> ballsCollected){
 		while(ballsOnField.size()==0){
+			if (done.get()){return;}
 			try {
 				wait();
 			}
@@ -30,9 +34,6 @@ public class Range {
 			ballsCollected.add(elem);
 		}
 		ballsOnField.clear();
-		
-		notifyAll();
-
 		cartOnField.set(false);
 		
 

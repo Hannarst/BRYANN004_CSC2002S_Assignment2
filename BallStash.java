@@ -1,16 +1,20 @@
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.ArrayList;
 
 public class BallStash {
 	//static variables
 	private static int sizeStash=20;
 	private static int sizeBucket=4;
+	private volatile AtomicBoolean done;
 	//ADD variables: a collection of golf balls, called stash
-	private volatile BlockingQueue<golfBall> ballsInStash = new ArrayBlockingQueue(sizeStash);
+	private volatile ArrayList<golfBall> ballsInStash = new ArrayList(sizeStash);
 
 
-	public BallStash(){
+	public BallStash(AtomicBoolean doneF){
+		done = doneF;
 		for (int i=0; i<sizeStash; i++){
 			ballsInStash.add(new golfBall());
 		}
@@ -24,19 +28,18 @@ public class BallStash {
 
 	public synchronized int getBucketBalls(golfBall[] bucket){
 		while(getBallsInStash()<sizeBucket){
+			if (done.get()){return -1;}
 			try {
 	 			wait();
 			}
 			catch (InterruptedException e) {}
 		}
 		for(int i=0; i<sizeBucket; i++){
-			try{
-				bucket[i] = ballsInStash.take();
-			}
-			catch(InterruptedException e) {}
+			bucket[i] = ballsInStash.remove(0);
+
 		}
 		
-		if(getBallsInStash()==0){
+		if(getBallsInStash()<sizeBucket){
 			notifyAll();
 		}
 		return getBallsInStash();
@@ -46,6 +49,11 @@ public class BallStash {
 		for(golfBall ball: balls){
 			ballsInStash.add(ball);
 		}
+		notifyAll();
+	}
+	
+	public synchronized void wake(){
+		notifyAll();
 	}
 
 	public int getBallsInStash(){

@@ -1,3 +1,4 @@
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -16,9 +17,9 @@ public class DrivingRangeApp {
 		Golfer.setBallsPerBucket(sizeBucket);
 
 		//initialize shared variables
-		BallStash stash = new BallStash();
 		AtomicBoolean cartFlag  = new AtomicBoolean(false);
-		Range field = new Range(cartFlag);
+		BallStash stash = new BallStash(done);
+		Range field = new Range(cartFlag, done);
 
 
 
@@ -41,7 +42,17 @@ public class DrivingRangeApp {
 		//for testing, just run for a bit
 		Thread.sleep(30000);// this is an arbitrary value - you may want to make it random
 		done.set(true);
+		stash.wake();
 		System.out.println("=======  River Club Driving Range Closing ========");
+
+		
+		
+		for (int i=0; i<noGolfers; i++){
+			golfers[i].join();
+		}
+		bollie.join();
+		
+		System.out.println("=======  River Club Driving Closed ========");
 
 
 	}
