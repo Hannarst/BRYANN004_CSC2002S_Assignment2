@@ -10,13 +10,13 @@ public class BallStash {
 	private static int sizeBucket=4;
 	private volatile AtomicBoolean done;
 	//ADD variables: a collection of golf balls, called stash
-	private volatile ArrayList<golfBall> ballsInStash = new ArrayList(sizeStash);
+	private volatile ArrayList<GolfBall> ballsInStash = new ArrayList(sizeStash);
 
 
 	public BallStash(AtomicBoolean doneF){
 		done = doneF;
 		for (int i=0; i<sizeStash; i++){
-			ballsInStash.add(new golfBall());
+			ballsInStash.add(new GolfBall());
 		}
 
 	}
@@ -26,9 +26,11 @@ public class BallStash {
 	// addBallsToStash
 	// getBallsInStash - return number of balls in the stash
 
-	public synchronized int getBucketBalls(golfBall[] bucket){
+	public synchronized int getBucketBalls(GolfBall[] bucket){
 		while(getBallsInStash()<sizeBucket){
-			if (done.get()){return -1;}
+			if (done.get()){
+				return -1;
+			}
 			try {
 	 			wait();
 			}
@@ -38,20 +40,20 @@ public class BallStash {
 			bucket[i] = ballsInStash.remove(0);
 
 		}
-		
+
 		if(getBallsInStash()<sizeBucket){
 			notifyAll();
 		}
 		return getBallsInStash();
 	}
 
-	public synchronized void addBallsToStash(ArrayList<golfBall> balls){
-		for(golfBall ball: balls){
+	public synchronized void addBallsToStash(ArrayList<GolfBall> balls){
+		for(GolfBall ball: balls){
 			ballsInStash.add(ball);
 		}
 		notifyAll();
 	}
-	
+
 	public synchronized void wake(){
 		notifyAll();
 	}

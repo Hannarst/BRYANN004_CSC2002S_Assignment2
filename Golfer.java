@@ -17,7 +17,7 @@ public class Golfer extends Thread {
 
 	private int myID;
 
-	private golfBall[] golferBucket;
+	private GolfBall[] golferBucket;
 	private volatile BallStash sharedStash; //link to shared stash
 	private volatile Range sharedField; //link to shared field
 	private Random swingTime;
@@ -29,7 +29,7 @@ public class Golfer extends Thread {
 		sharedField = field; //shared
 		cartOnField = cartFlag; //shared
 		done = doneFlag;
-		golferBucket = new golfBall[ballsPerBucket];
+		golferBucket = new GolfBall[ballsPerBucket];
 		swingTime = new Random();
 		myID=newGolfID();
 	}
@@ -51,7 +51,7 @@ public class Golfer extends Thread {
 				System.out.println(">>> Golfer #"+ myID + " trying to fill bucket with "+getBallsPerBucket()+" balls.");
 				int left = sharedStash.getBucketBalls(golferBucket);
 				if(done.get()){
-					System.out.println(">>> Golfer #"+ myID + " returned with empty bucket!");
+					System.out.println(">>> Golfer #"+ myID + " denied bucket! Bye though..");
 					break;
 				}
 				System.out.println("<<< Golfer #"+ myID + " filled bucket with "+getBallsPerBucket()+" balls (remaining stash=" + left+")");
@@ -67,7 +67,7 @@ public class Golfer extends Thread {
 							while(cartOnField.get()){
 								sleep(3000);
 							}
-						
+
 						}
 						catch (InterruptedException e) {
 							e.printStackTrace();
@@ -81,5 +81,8 @@ public class Golfer extends Thread {
 
 
 		}
+
+		
+
 	}
 }

@@ -23,15 +23,15 @@ public class Bollie extends Thread{
 	public void run() {
 
 		//while True
-		ArrayList<golfBall> ballsCollected = new ArrayList();
+		ArrayList<GolfBall> ballsCollected = new ArrayList();
 		while (done.get()!=true) {
 			try {
 				sleep(waitTime.nextInt(5000));
 
 				System.out.println("*********** Bollie going out ************");
-				
+
 				sharedField.collectAllBallsFromField(ballsCollected);
-				
+
 				System.out.println("*********** Bollie collected "+ballsCollected.size() +" balls   ************");
 				// collect balls, no golfers allowed to swing while this is happening
 				sleep(1000);

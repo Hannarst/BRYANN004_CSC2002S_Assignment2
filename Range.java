@@ -10,7 +10,7 @@ public class Range {
 	private volatile AtomicBoolean cartOnField;
 	private volatile AtomicBoolean done;
 	//ADD variable: ballsOnField collection;
-	private volatile BlockingQueue<golfBall> ballsOnField = new ArrayBlockingQueue(sizeStash);
+	private volatile ArrayList<GolfBall> ballsOnField = new ArrayList(sizeStash);
 
 	//Add constructors
 	public Range(AtomicBoolean cartFlag, AtomicBoolean doneF){
@@ -18,8 +18,8 @@ public class Range {
 		cartOnField = cartFlag;
 	}
 
-	//ADD method: collectAllBallsFromField(golfBall [] ballsCollected)
-	public synchronized void collectAllBallsFromField(ArrayList<golfBall> ballsCollected){
+	//ADD method: collectAllBallsFromField(GolfBall [] ballsCollected)
+	public synchronized void collectAllBallsFromField(ArrayList<GolfBall> ballsCollected){
 		while(ballsOnField.size()==0){
 			if (done.get()){return;}
 			try {
@@ -27,27 +27,25 @@ public class Range {
 			}
 			catch (InterruptedException e) {}
 		}
-		
+
 		cartOnField.set(true);
 
-		for(golfBall elem : ballsOnField){
+		for(GolfBall elem : ballsOnField){
 			ballsCollected.add(elem);
 		}
 		ballsOnField.clear();
 		cartOnField.set(false);
-		
-
-
 	}
 
-	//ADD method: hitBallOntoField(golfBall ball)
-	public synchronized void hitBallOntoField(golfBall ball){
+	public synchronized void wake(){
+		notify();
+	}
+
+	//ADD method: hitBallOntoField(GolfBall ball)
+	public synchronized void hitBallOntoField(GolfBall ball){
 		ballsOnField.add(ball);
-		if (ballsOnField.size()==sizeStash){
-			notifyAll();
-		}
 	}
-	
+
 	public synchronized int getNumBalls(){
 		return ballsOnField.size();
 	}

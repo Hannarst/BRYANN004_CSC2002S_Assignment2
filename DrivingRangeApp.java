@@ -41,17 +41,10 @@ public class DrivingRangeApp {
 
 		//for testing, just run for a bit
 		Thread.sleep(30000);// this is an arbitrary value - you may want to make it random
+		System.out.println("=======  River Club Driving Range Closing ========");
 		done.set(true);
 		stash.wake();
-		System.out.println("=======  River Club Driving Range Closing ========");
-
-		
-		
-		for (int i=0; i<noGolfers; i++){
-			golfers[i].join();
-		}
-		bollie.join();
-		
+		field.wake();
 		System.out.println("=======  River Club Driving Closed ========");
 
 
