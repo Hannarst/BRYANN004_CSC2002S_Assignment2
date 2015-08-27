@@ -8,9 +8,9 @@ public class BallStash {
 	//static variables
 	private static int sizeStash=20;
 	private static int sizeBucket=4;
+
 	private volatile AtomicBoolean done;
-	//ADD variables: a collection of golf balls, called stash
-	private volatile ArrayList<GolfBall> ballsInStash = new ArrayList(sizeStash);
+	private ArrayList<GolfBall> ballsInStash = new ArrayList(sizeStash);
 
 
 	public BallStash(AtomicBoolean doneF){
@@ -18,13 +18,7 @@ public class BallStash {
 		for (int i=0; i<sizeStash; i++){
 			ballsInStash.add(new GolfBall());
 		}
-
 	}
-
-	//ADD methods:
-	//getBucketBalls
-	// addBallsToStash
-	// getBallsInStash - return number of balls in the stash
 
 	public synchronized int getBucketBalls(GolfBall[] bucket){
 		while(getBallsInStash()<sizeBucket){
@@ -36,14 +30,15 @@ public class BallStash {
 			}
 			catch (InterruptedException e) {}
 		}
+
 		for(int i=0; i<sizeBucket; i++){
 			bucket[i] = ballsInStash.remove(0);
-
 		}
 
 		if(getBallsInStash()<sizeBucket){
 			notifyAll();
 		}
+
 		return getBallsInStash();
 	}
 

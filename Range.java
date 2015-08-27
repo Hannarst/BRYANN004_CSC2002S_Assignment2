@@ -10,7 +10,7 @@ public class Range {
 	private volatile AtomicBoolean cartOnField;
 	private volatile AtomicBoolean done;
 	//ADD variable: ballsOnField collection;
-	private volatile ArrayList<GolfBall> ballsOnField = new ArrayList(sizeStash);
+	private ArrayList<GolfBall> ballsOnField = new ArrayList(sizeStash);
 
 	//Add constructors
 	public Range(AtomicBoolean cartFlag, AtomicBoolean doneF){

@@ -8,8 +8,8 @@ public class Bollie extends Thread{
 
 	private volatile AtomicBoolean done;  // flag to indicate when threads should stop
 
-	private volatile BallStash sharedStash; //link to shared stash
-	private volatile Range sharedField; //link to shared field
+	private BallStash sharedStash; //link to shared stash
+	private Range sharedField; //link to shared field
 	private Random waitTime;
 
 	//link to shared field

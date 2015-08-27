@@ -18,8 +18,8 @@ public class Golfer extends Thread {
 	private int myID;
 
 	private GolfBall[] golferBucket;
-	private volatile BallStash sharedStash; //link to shared stash
-	private volatile Range sharedField; //link to shared field
+	private BallStash sharedStash; //link to shared stash
+	private Range sharedField; //link to shared field
 	private Random swingTime;
 
 
@@ -34,7 +34,8 @@ public class Golfer extends Thread {
 		myID=newGolfID();
 	}
 
-	public synchronized static int newGolfID() {
+	public
+	static int newGolfID() {
 		return noGolfers.getAndIncrement();
 	}
 
@@ -82,7 +83,7 @@ public class Golfer extends Thread {
 
 		}
 
-		
+
 
 	}
 }
