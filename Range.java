@@ -7,34 +7,34 @@ import java.util.ArrayList;
 
 public class Range {
 	private static int sizeStash=20;
-	private volatile AtomicBoolean cartOnField;
-	private volatile AtomicBoolean done;
+	private volatile AtomicBoolean cartFlag;
+	private volatile AtomicBoolean doneFlag;
 	//ADD variable: ballsOnField collection;
 	private ArrayList<GolfBall> ballsOnField = new ArrayList(sizeStash);
 
 	//Add constructors
-	public Range(AtomicBoolean cartFlag, AtomicBoolean doneF){
-		done = doneF;
-		cartOnField = cartFlag;
+	public Range(AtomicBoolean cartFlag, AtomicBoolean doneFlag){
+		this.doneFlag = doneFlag;
+		this.cartFlag = cartFlag;
 	}
 
 	//ADD method: collectAllBallsFromField(GolfBall [] ballsCollected)
 	public synchronized void collectAllBallsFromField(ArrayList<GolfBall> ballsCollected){
 		while(ballsOnField.size()==0){
-			if (done.get()){return;}
+			if (doneFlag.get()){return;}
 			try {
 				wait();
 			}
 			catch (InterruptedException e) {}
 		}
 
-		cartOnField.set(true);
+		cartFlag.set(true);
 
 		for(GolfBall elem : ballsOnField){
 			ballsCollected.add(elem);
 		}
 		ballsOnField.clear();
-		cartOnField.set(false);
+		cartFlag.set(false);
 	}
 
 	public synchronized void wake(){

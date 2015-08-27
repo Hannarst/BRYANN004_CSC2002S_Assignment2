@@ -16,11 +16,11 @@ public class DrivingRangeApp {
 		Golfer.setBallsPerBucket(sizeBucket);
 
 		//initialize shared variables
-		AtomicBoolean done  =new AtomicBoolean(false);
+		AtomicBoolean doneFlag  =new AtomicBoolean(false);
 		AtomicBoolean cartFlag  = new AtomicBoolean(false);
 
-		BallStash stash = new BallStash(done);
-		Range field = new Range(cartFlag, done);
+		BallStash stash = new BallStash(doneFlag);
+		Range field = new Range(cartFlag, doneFlag);
 
 		System.out.println("=======   River Club Driving Range Open  ========");
 		System.out.println("======= Golfers:"+noGolfers+" balls: "+sizeStash+ " bucketSize:"+sizeBucket+"  ======");
@@ -28,16 +28,16 @@ public class DrivingRangeApp {
 		//create threads and set them running
 		Golfer[] golfers = new Golfer[noGolfers];
 		for (int i=0; i<noGolfers; i++){
-			golfers[i] = new Golfer(stash, field, cartFlag, done);
+			golfers[i] = new Golfer(stash, field, cartFlag, doneFlag);
 			golfers[i].start();
 		}
-		Bollie bollie = new Bollie(stash, field, done);
+		Bollie bollie = new Bollie(stash, field, doneFlag);
 		bollie.start();
 
 		//for testing, just run for a bit
 		Thread.sleep(30000);// this is an arbitrary value - you may want to make it random
 		System.out.println("=======  River Club Driving Range Closing ========");
-		done.set(true);
+		doneFlag.set(true);
 		stash.wake();
 		field.wake();
 		System.out.println("=======  River Club Driving Closed ========");

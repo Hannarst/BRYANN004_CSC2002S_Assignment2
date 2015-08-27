@@ -9,12 +9,12 @@ public class BallStash {
 	private static int sizeStash=20;
 	private static int sizeBucket=4;
 
-	private volatile AtomicBoolean done;
+	private volatile AtomicBoolean doneFlag;
 	private ArrayList<GolfBall> ballsInStash = new ArrayList(sizeStash);
 
 
-	public BallStash(AtomicBoolean doneF){
-		done = doneF;
+	public BallStash(AtomicBoolean doneFlag){
+		this.doneFlag = doneFlag;
 		for (int i=0; i<sizeStash; i++){
 			ballsInStash.add(new GolfBall());
 		}
@@ -22,7 +22,7 @@ public class BallStash {
 
 	public synchronized int getBucketBalls(GolfBall[] bucket){
 		while(getBallsInStash()<sizeBucket){
-			if (done.get()){
+			if (doneFlag.get()){
 				return -1;
 			}
 			try {

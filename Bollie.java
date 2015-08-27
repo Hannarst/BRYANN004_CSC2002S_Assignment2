@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Bollie extends Thread{
 
-	private volatile AtomicBoolean done;  // flag to indicate when threads should stop
+	private volatile AtomicBoolean doneFlag;  // flag to indicate when threads should stop
 
 	private BallStash sharedStash; //link to shared stash
 	private Range sharedField; //link to shared field
@@ -17,14 +17,14 @@ public class Bollie extends Thread{
 		sharedStash = stash; //shared
 		sharedField = field; //shared
 		waitTime = new Random();
-		done = doneFlag;
+		this.doneFlag = doneFlag;
 	}
 
 	public void run() {
 
 		//while True
 		ArrayList<GolfBall> ballsCollected = new ArrayList();
-		while (done.get()!=true) {
+		while (doneFlag.get()!=true) {
 			try {
 				sleep(waitTime.nextInt(5000));
 

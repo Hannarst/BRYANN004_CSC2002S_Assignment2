@@ -9,8 +9,8 @@ public class Golfer extends Thread {
 
 	//remeber to ensure thread saftey
 
-	private volatile AtomicBoolean done;
-	private volatile AtomicBoolean cartOnField;
+	private volatile AtomicBoolean doneFlag;
+	private volatile AtomicBoolean cartFlag;
 
 	private static AtomicInteger noGolfers = new AtomicInteger(1); //shared amoungst threads
 	private static int ballsPerBucket=4; //shared amoungst threads
@@ -27,8 +27,8 @@ public class Golfer extends Thread {
 	Golfer(BallStash stash,Range field, AtomicBoolean cartFlag, AtomicBoolean doneFlag) {
 		sharedStash = stash; //shared
 		sharedField = field; //shared
-		cartOnField = cartFlag; //shared
-		done = doneFlag;
+		this.cartFlag = cartFlag; //shared
+		this.doneFlag = doneFlag;
 		golferBucket = new GolfBall[ballsPerBucket];
 		swingTime = new Random();
 		myID=newGolfID();
@@ -47,11 +47,11 @@ public class Golfer extends Thread {
 	}
 	public void run() {
 
-		while (done.get()!=true) {
+		while (doneFlag.get()!=true) {
 
 				System.out.println(">>> Golfer #"+ myID + " trying to fill bucket with "+getBallsPerBucket()+" balls.");
 				int left = sharedStash.getBucketBalls(golferBucket);
-				if(done.get()){
+				if(doneFlag.get()){
 					System.out.println(">>> Golfer #"+ myID + " denied bucket! Bye though..");
 					break;
 				}
@@ -65,7 +65,7 @@ public class Golfer extends Thread {
 							sharedField.hitBallOntoField(golferBucket[b]);
 							System.out.println("Golfer #"+ myID + " hit ball #"+golferBucket[b].getID()+" onto field");
 
-							while(cartOnField.get()){
+							while(cartFlag.get()){
 								sleep(3000);
 							}
 
