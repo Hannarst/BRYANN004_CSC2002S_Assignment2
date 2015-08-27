@@ -1,11 +1,15 @@
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Random;
+
 
 public class DrivingRangeApp {
 
 
 	public static void main(String[] args) throws InterruptedException {
+
+		Random random = new Random();
 
 		int noGolfers = Integer.parseInt(args[0]);
 		int sizeStash= Integer.parseInt(args[1]);
@@ -28,6 +32,8 @@ public class DrivingRangeApp {
 		//create threads and set them running
 		Golfer[] golfers = new Golfer[noGolfers];
 		for (int i=0; i<noGolfers; i++){
+			Thread.sleep(random.nextInt(4000));
+			System.out.println(">>> New Golfer! <<<");
 			golfers[i] = new Golfer(stash, field, cartFlag, doneFlag);
 			golfers[i].start();
 		}
