@@ -31,7 +31,10 @@ public class Bollie extends Thread{
 				System.out.println("*********** Bollie going out ************");
 
 				sharedField.collectAllBallsFromField(ballsCollected);
-
+				if(doneFlag.get()){
+					System.out.println(">>> Bollie returns from the field, disappointed");
+					break;
+				}
 				System.out.println("*********** Bollie collected "+ballsCollected.size() +" balls   ************");
 				// collect balls, no golfers allowed to swing while this is happening
 				sleep(1000);

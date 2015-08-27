@@ -1,23 +1,23 @@
 
 
-public class golfBall {
-	
+public class GolfBall {
+
 	//add mechanisms for thread safety
-	
-	private volatile static int noBalls;
+
+	private static int noBalls;
 	private int myID;
-	
-	golfBall() {
+
+	GolfBall() {
 		myID=noBalls;
 		incID();
 	}
-	
+
 	public int getID() {
-		return myID;		
+		return myID;
 	}
-	
+
 	private static void  incID() {
 		noBalls++;
 	}
-	
+
 }

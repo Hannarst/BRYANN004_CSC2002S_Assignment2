@@ -53,7 +53,7 @@ public class BallStash {
 		notifyAll();
 	}
 
-	public int getBallsInStash(){
+	public synchronized int getBallsInStash(){
 		return ballsInStash.size();
 	}
 

@@ -12,7 +12,7 @@ public class Golfer extends Thread {
 	private volatile AtomicBoolean doneFlag;
 	private volatile AtomicBoolean cartFlag;
 
-	private static AtomicInteger noGolfers = new AtomicInteger(1); //shared amoungst threads
+	private static volatile AtomicInteger noGolfers = new AtomicInteger(1); //shared amoungst threads
 	private static int ballsPerBucket=4; //shared amoungst threads
 
 	private int myID;

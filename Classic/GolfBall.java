@@ -4,7 +4,7 @@ public class GolfBall {
 
 	//add mechanisms for thread safety
 
-	private volatile static int noBalls;
+	private static int noBalls;
 	private int myID;
 
 	GolfBall() {
